@@ -6,6 +6,7 @@ errStatus0 = "enter complete file path"
 #
 if len(sys.argv)==2:
 	filePath = sys.argv[1] #os.chdir("../accuracyAccess/errorMat.txt")
+	print filePath
 else:
 	print errStatus0
 # Check errors in input file
@@ -19,6 +20,10 @@ def checkErrors(areaArray, errorMat):
 	return status
 # main
 def analyzeAccuracy(filePath):
+	fName = "output.txt"
+	curPath = os.getcwd()
+	print ("writing output to \n %s/%s")%(curPath,fName)	
+	fName = open(fName, 'w')
 	areaArray = []
 	errorMat = []
 	count = 0
@@ -32,12 +37,15 @@ def analyzeAccuracy(filePath):
 		count = count + 1
 	try:	
 		areaArray = np.asarray(areaArray, dtype=np.float32)
-		#print "area array"
-		#print areaArray
+		fName.write("User Inputs \n 1) Area Distribution \n")
+		np.savetxt(fName, areaArray, delimiter=',', fmt='%1.4f')
+		#fName.write(areaArray)
+		print (areaArray)
 		totalArea = areaArray.sum()
-		#print "error array"
 		errorMat = np.asarray(errorMat, dtype=np.float32)
-		#print errorMat
+		fName.write("\n 2) Confustion matrix \n")		
+		np.savetxt(fName, errorMat, delimiter=',', fmt='%1.4f')
+		print(errorMat)
 	except:
 		print errStatus
 	# Check the errors in user input
@@ -93,50 +101,74 @@ def analyzeAccuracy(filePath):
 		# pij	
 		# ni	
 		# wi	
-		print ("pij \n %s")%(pij)
-		print ("ni \n %s")%(ni)
-		print ("wi \n %s")%(wi)
+		#print ("pij \n %s")%(pij)
+		fName.write("\n Analysis Output \n 1) Matrix p(ij) \n")
+		np.savetxt(fName, pij, delimiter=',', fmt='%1.4f')		
+		#print ("ni \n %s")%(ni)
+		fName.write("\n 2) Number of samples / observations n(i) \n")
+		np.savetxt(fName, ni, delimiter=',', fmt='%1.4f')		
+		#print ("wi \n %s")%(wi)
+		fName.write("\n 3) Weight values Wi \n")
+		np.savetxt(fName, wi, delimiter=',', fmt='%1.4f')
 		SD = []
 		for i in range (0,(len(pij))):
-			#print (pij[:,i])
-			#print (wi)
-			#print (ni)
 			ss = ((pij[:,i]*wi-(pij[:,i]*pij[:,i]))/(ni))
 			ss = np.sqrt(ss.sum())
 			SD.append(ss)
 		#
-		#some = np.asarray(some, dtype=np.float32))
-		print ("Standard Error = %s")%(SD)
+		SD = np.asarray(SD, dtype=np.float32)
+		fName.write("\n 4) Standard Error (SE) \n")
+		np.savetxt(fName, SD, delimiter=',', fmt='%1.4f')
+		#print ("Standard Error = %s")%(SD)
 		SdPix = SD* np.asarray(totalArea, dtype=np.float32)
-		print ("Standard Error in [ px ] = %s")%(SdPix)
+		fName.write("\n 5) Standard Error in [ px ] \n")
+		np.savetxt(fName, SdPix, delimiter=',', fmt='%1.4f')
+		#print ("Standard Error in [ px ] = %s")%(SdPix)
 		SdInHa = ((SdPix * np.asarray(pixConv, dtype=np.float32))/np.asarray(haConv, dtype=np.float32))
-		print ("Standard Error in [ ha ] = %s")%(SdInHa)
+		#print ("Standard Error in [ ha ] = %s")%(SdInHa)
+		fName.write("\n 6) Standard Error in [ ha ] \n")
+		np.savetxt(fName, SdInHa, delimiter=',', fmt='%1.4f')
 		# for 95 % confidence interval 1.98
 		CiVal = 1.98
 		ConfInt = SdInHa * np.asarray(CiVal, dtype=np.float32)
-		print ("95 CI in [ ha ] = %s")%(ConfInt)
+		#print ("95 CI in [ ha ] = %s")%(ConfInt)
+		fName.write("\n 7) Constant for 95 percent Confidence Interval (CI) = ")
+		valC = ("%s")%(CiVal)
+		fName.write(valC)
+		fName.write("\n \n 8) CI in [ ha ] \n")
+		np.savetxt(fName, ConfInt, delimiter=',', fmt='%1.4f')
 		#-------------------------------------------------
 		# Margin of error
 		MoE = (ConfInt / areaHa)
-		print ("Margin of Error = %s")%(MoE)
+		#print ("Margin of Error = %s")%(MoE)
+		fName.write("\n 9) Margin of Error (MoE) \n  \n")
+		np.savetxt(fName, MoE, delimiter=',', fmt='%1.4f')
 		MoEPerCent = MoE* np.asarray(100, dtype=np.float32)
-		print ("Margin of Error in Percent = %s")%(MoEPerCent)
-
+		#print ("Margin of Error in Percent = %s")%(MoEPerCent)
+		fName.write("\n 10) MoE in [ percent ] \n  \n")
+		np.savetxt(fName, MoEPerCent, delimiter=',', fmt='%1.4f')
 		#-------------------------------------------------
 		# Overall Accuracy
 		OverallA = np.diag(pij)
 		OverallA = OverallA.sum()
-		print ("Overal accuracy = %s")%(OverallA)
+		#print ("Overal accuracy = %s")%(OverallA)
+		fName.write("\n 11) Overall accuracy \n  \n")
+		ov = ("%s")%(OverallA)		
+		fName.write(ov)
 		#-------------------------------------------------
 		# User's accuracy
 		UAccuracy = (np.diag(pij)/wi)
-		print ("User's accuracy = %s")%(UAccuracy)
+		#print ("User's accuracy = %s")%(UAccuracy)
+		fName.write("\n 12) User's accuracy \n  \n")
+		np.savetxt(fName, UAccuracy, delimiter=',', fmt='%1.4f')
 		#-------------------------------------------------
 		# Producers's accuracy
 		ProdAccuracy = (np.diag(pij)/erroRowSum)
-		print("Producers Accuracy = \n %s")%(ProdAccuracy)
+		#print("Producers Accuracy = \n %s")%(ProdAccuracy)
+		fName.write("\n 13) Producers Accuracy \n  \n")
+		np.savetxt(fName, ProdAccuracy, delimiter=',', fmt='%1.4f')
 		#-------------------------------------------------
-		# to do Write result to the file 
+		fName.close()
 		#
 	else:
 		print (check)
