@@ -1,7 +1,9 @@
 ## accuracyAssess
 Simple python script for accuracy assessment based on confusion matrix.
 This will assist in reporting the accuracy of map making. 
-Note: The script is under modification for better usabality keep track of README.md/.txt file.
+Note: 
+1) The script is under modification for better usabality keep track of README.md/.txt file.
+2) area estiamtions are only for Landsat data
 
 ## Example error matrix
 create comma seperated file (csv)
@@ -22,8 +24,9 @@ Note: 1. For more information one sample error matrix file named 'errorMatrix.tx
 
 ## References
 For more information please refer to following papers
--- Olofsson, et. al., 2014. Good practices for estimating area and assessing accuracy of land change. Remote Sensing of Environment, vol. 148 pp. 42-57.
--- Olofsson, et. al., 2013. Making better use of accuracy data in land change studies: Estimating accuracy and area and quantifying uncertainty using stratified estimation. Remote Sensing of Environment, vol. 129, pp. 122-131.
+
+1) Olofsson, et. al., 2014. Good practices for estimating area and assessing accuracy of land change. Remote Sensing of Environment, vol. 148 pp. 42-57.
+2) Olofsson, et. al., 2013. Making better use of accuracy data in land change studies: Estimating accuracy and area and quantifying uncertainty using stratified estimation. Remote Sensing of Environment, vol. 129, pp. 122-131.
 
 # Author
 Suryakant Sawant

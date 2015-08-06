@@ -116,10 +116,9 @@ def analyzeAccuracy(filePath):
 		ConfInt = SdInHa * np.asarray(CiVal, dtype=np.float32)
 		print ("95 CI in [ ha ] = %s")%(ConfInt)
 		#-------------------------------------------------
-		#
+		# Margin of error
 		MoE = (ConfInt / areaHa)
 		print ("Margin of Error = %s")%(MoE)
-
 		MoEPerCent = MoE* np.asarray(100, dtype=np.float32)
 		print ("Margin of Error in Percent = %s")%(MoEPerCent)
 
@@ -141,6 +140,6 @@ def analyzeAccuracy(filePath):
 		#
 	else:
 		print (check)
-#
+# Implementation
 analyzeAccuracy(filePath)
 
